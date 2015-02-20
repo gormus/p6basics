@@ -1,0 +1,549 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the standard installation profile.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function p6basics_install() {
+  _p6basics_install_modules();
+  _p6basics_configure_modules();
+  _p6basics_create_filter_formats();
+  _p6basics_create_content_types();
+  _p6basics_create_roles();
+  _p6basics_update_permissions();
+  _p6basics_update_system_settings();
+}
+
+/**
+ * Install and enable needed modules.
+ *
+ * Instead of defining dependencies in the .INFO file, we only enable them.
+ *
+ * @see  module_enable().
+ */
+function _p6basics_install_modules() {
+  $modules = array(
+    // Core.
+    'block',
+    'contextual',
+    'dashboard',
+    'dblog',
+    'field_sql_storage',
+    'field',
+    'field_ui',
+    'file',
+    'filter',
+    'help',
+    'image',
+    'options',
+    'list',
+    'menu',
+    'number',
+    'path',
+    'rdf',
+    'search',
+    'shortcut',
+    'taxonomy',
+    'text',
+    'toolbar',
+    'update',
+    'transliteration',
+
+    // Pantheon.
+    // 'pantheon_api',
+    // 'pantheon_login',
+
+    // Contributed.
+    'date',
+    'date_popup',
+    'date_all_day',
+    'token',
+    'filefield_paths',
+    'filefield_sources',
+    'pathauto',
+    'redirect',
+    'globalredirect',
+    'imce',
+    'imce_mkdir',
+    'imce_wysiwyg',
+    'elements',
+    'html5_tools',
+  );
+
+  module_enable($modules, FALSE);
+}
+
+/**
+ * Configure installed modules.
+ */
+function _p6basics_configure_modules() {
+  $path = drupal_get_path('module', 'p6basics');
+
+  foreach (glob("$path/variables/*.inc") as $file) {
+    include_once $file;
+  }
+}
+
+/**
+ * Create "Filtered HTML" and "Full HTML" filter formats.
+ *
+ * WYSIWYG and Pathologic settings are included.
+ */
+function _p6basics_create_filter_formats() {
+  $local_paths = array(
+    'http://dev-EXAMPLE.gotpantheon.com/',
+    'http://test-EXAMPLE.gotpantheon.com/',
+    'http://live-EXAMPLE.gotpantheon.com/',
+    'http://www.EXAMPLE.com/',
+    'http://EXAMPLE.com/',
+  );
+
+  $format_filtered_html = array(
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'cache' => 1,
+    'status' => 1,
+    'weight' => -9,
+    'filters' => array(
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+        'settings' => array(
+          'filter_url_length' => 72,
+        ),
+      ),
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+        'settings' => array(
+          'allowed_html' => '<div> <p> <br> <blockquote> <strong> <em> <s> <a> <ul> <ol> <li>',
+          'filter_html_help' => 1,
+          'filter_html_nofollow' => 1,
+        ),
+      ),
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'pathologic' => array(
+        'weight' => 50,
+        'status' => 1,
+        'settings' => array(
+          'local_paths' => implode("\n", $local_paths),
+          'protocol_style' => 'full',
+        ),
+      ),
+    ),
+  );
+  $format_filtered_html = (object) $format_filtered_html;
+  filter_format_save($format_filtered_html);
+
+  $format_full_html = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'cache' => 1,
+    'status' => 1,
+    'weight' => -10,
+    'filters' => array(
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+        'settings' => array(
+          'filter_url_length' => 72,
+        ),
+      ),
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'pathologic' => array(
+        'weight' => 50,
+        'status' => 1,
+        'settings' => array(
+          'local_paths' => implode("\n", $local_paths),
+          'protocol_style' => 'full',
+        ),
+      ),
+    ),
+  );
+  $format_full_html = (object) $format_full_html;
+  filter_format_save($format_full_html);
+}
+
+/**
+ * Create following content-types with custom fields:
+ *  - Basic page: Title, Body, Hero (image)
+ *  - News:       Title, Body, Hero (image), Date (date)
+ *  - Event:      Title, Body, Hero (image), Date (date)
+ *  - Blog post:  Title, Body, Hero (image), Date (date)
+ */
+function _p6basics_create_content_types() {
+  $types = array(
+    array(
+      'type' => 'page',
+      'name' => st('Basic page'),
+      'base' => 'node_content',
+      'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
+      'custom' => 0,
+      'modified' => 1,
+      'locked' => 1,
+    ),
+    array(
+      'type' => 'news',
+      'name' => st('News'),
+      'base' => 'node_content',
+      'description' => st('Use <em>news</em> for time-sensitive content like news, or press release posts.'),
+      'custom' => 0,
+      'modified' => 1,
+      'locked' => 1,
+    ),
+    array(
+      'type' => 'event',
+      'name' => st('Event'),
+      'base' => 'node_content',
+      'description' => st('Use <em>event</em> for ... posts.'),
+      'custom' => 0,
+      'modified' => 1,
+      'locked' => 1,
+    ),
+    array(
+      'type' => 'blogpost',
+      'name' => st('Blog post'),
+      'base' => 'node_content',
+      'description' => st('Use <em>blog post</em> for time-sensitive content.'),
+      'custom' => 0,
+      'modified' => 1,
+      'locked' => 1,
+    ),
+  );
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+
+    variable_set('node_options_' . $type->type, array('status', 'revision'));
+    variable_set('node_submitted_' . $type->type, FALSE);
+    variable_set('comment_' . $type->type, 0);
+  }
+
+  // Add a body field.
+  // @see node_add_body_field().
+  $field_body_name = 'body';
+  foreach (array('page', 'news', 'event', 'blogpost') as $type) {
+    // Add or remove the body field, as needed.
+    $field_body = field_info_field($field_body_name);
+    $instance_body = field_info_instance('node', $field_body_name, $type);
+    if (empty($field_body)) {
+      $field_body = array(
+        'field_name' => $field_body_name,
+        'type' => 'text_with_summary',
+        'entity_types' => array('node'),
+      );
+      $field_body = field_create_field($field_body);
+    }
+    if (empty($instance_body)) {
+      $instance_body = array(
+        'field_name' => $field_body_name,
+        'entity_type' => 'node',
+        'bundle' => $type,
+        'label' => 'Body',
+        'widget' => array(
+          'type' => 'text_textarea_with_summary',
+          'weight' => 3,
+        ),
+        'settings' => array('display_summary' => FALSE),
+        'display' => array(
+          'default' => array(
+            'label' => 'hidden',
+            'type' => 'text_default',
+          ),
+          'teaser' => array(
+            'label' => 'hidden',
+            'type' => 'text_summary_or_trimmed',
+          ),
+        ),
+      );
+      $instance_body = field_create_instance($instance_body);
+    }
+  }
+
+  // Add an image field to all content-types for the Hero image.
+  $field_hero_name = 'p6b_hero';
+  foreach (array('page', 'news', 'event', 'blogpost') as $type) {
+    $field_hero = field_info_field($field_hero_name);
+    $instance_hero = field_info_instance('node', $field_hero_name, $type);
+    if (empty($field_hero)) {
+      $field_hero = array(
+        'field_name' => $field_hero_name,
+        'type' => 'image',
+        'cardinality' => -1,
+        'locked' => FALSE,
+        'indexes' => array('fid' => array('fid')),
+        'settings' => array(
+          'uri_scheme' => 'public',
+          'default_image' => FALSE,
+        ),
+        'storage' => array(
+          'type' => 'field_sql_storage',
+          'settings' => array(),
+        ),
+      );
+      $field_hero = field_create_field($field_hero);
+    }
+    if (empty($instance_hero)) {
+      $instance_hero = array(
+        'field_name' => $field_hero_name,
+        'entity_type' => 'node',
+        'bundle' => $type,
+        'label' => 'Hero',
+        'description' => 'Hero image',
+        'required' => FALSE,
+        'settings' => array(
+          'file_extensions' => 'png gif jpg jpeg',
+          'max_filesize' => '',
+          'max_resolution' => '',
+          'min_resolution' => '',
+          'alt_field' => TRUE,
+          'title_field' => '',
+          'file_directory' => '_/hero/' . $type,
+          'filefield_paths' => array(
+            'file_path' => array(
+              'value' => '_/hero/' . $type,
+            ),
+          ),
+        ),
+        'widget' => array(
+          'type' => 'image_image',
+          'settings' => array(
+            'progress_indicator' => 'throbber',
+            'preview_image_style' => 'thumbnail',
+          ),
+          'weight' => 1,
+        ),
+        'display' => array(
+          'default' => array(
+            'label' => 'hidden',
+            'type' => 'image',
+            'settings' => array('image_style' => 'large', 'image_link' => ''),
+          ),
+          'teaser' => array(
+            'label' => 'hidden',
+            'type' => 'image',
+            'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
+          ),
+        ),
+      );
+      $instance_hero = field_create_instance($instance_hero);
+    }
+  }
+
+  // Add a date field.
+  $field_date_name = 'p6b_date';
+  foreach (array('news', 'event', 'blogpost') as $type) {
+    $field_date = field_info_field($field_date_name);
+    $instance_date = field_info_instance('node', $field_date_name, $type);
+    if (empty($field_date)) {
+      $field_date = array(
+        'field_name' => $field_date_name,
+        'type' => 'datetime',
+        'cardinality' => 1,
+        'settings' => array(
+          'granularity' => array('year', 'month', 'day', 'hour', 'minute'),
+          'tz_handling' => 'site',
+          // 'timezone_db' => date_get_timezone_db('site'),
+          'repeat' => 0,
+          'todate' => 'optional',
+          'cache_enabled' => 1,
+          'cache_count' => '4',
+        ),
+      );
+      $field_date = field_create_field($field_date);
+    }
+    if (empty($instance_date)) {
+      $instance_date = array(
+        'field_name' => $field_date_name,
+        'entity_type' => 'node',
+        'bundle' => $type,
+        'label' => 'Date',
+        'description' => '',
+        'required' => FALSE,
+        'settings' => array(
+          'default_value' => 'now',
+          'default_value2' => 'same',
+        ),
+        'widget' => array(
+          'type' => 'date_popup',
+          'settings' => array(
+            'increment' => 15,
+            'year_range' => '-10:+1',
+            'input_format' => 'M j Y - g:i:sa',
+            'input_format_custom' => '',
+            'text_parts' => array(),
+            'label_position' => 'above',
+            'display_all_day' => 1,
+          ),
+          'weight' => 2,
+        ),
+        'display' => array(
+          'default' => array(
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => array(
+              'format_type' => 'medium',
+              'show_repeat_rule' => 'show',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+            ),
+            'module' => 'date',
+          ),
+          'teaser' => array(
+            'label' => 'above',
+            'type' => 'date_default',
+            'weight' => 0,
+            'settings' => array(
+              'format_type' => 'short',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+            ),
+            'module' => 'date',
+          ),
+        ),
+      );
+      $instance_date = field_create_instance($instance_date);
+    }
+  }
+}
+
+/**
+ * Create Administrator and Editor roles.
+ */
+function _p6basics_create_roles() {
+  $roles = array(
+    99 => 'editor',
+    100 => 'administrator',
+  );
+
+  foreach ($roles as $weight => $role) {
+    if ($obj = user_role_load_by_name($role)) {
+      $obj->weight = $weight;
+    }
+    else {
+      $obj = new stdClass();
+      $obj->name = $role;
+      $obj->weight = $weight;
+    }
+
+    // Save new or update role object.
+    user_role_save((object) $obj);
+  }
+}
+
+/**
+ * Update permissions.
+ *
+ * - Grant all available permissions to administrator role.
+ * - Assign user #1 the "administrator" role.
+ * - Grant only required permissions to editor role.
+ * - Enable search for anonymous and authenticated users.
+ * - Set permissions for filter formats.
+ */
+function _p6basics_update_permissions() {
+  $editor_role = user_role_load_by_name('editor');
+  $admin_role = user_role_load_by_name('administrator');
+
+  $editor_permissions = array(
+    // Block.
+    'administer blocks',
+    // Contextual links.
+    'access contextual links',
+    // Menu.
+    'administer menu',
+    // Node.
+    'access content overview',
+    'view own unpublished content',
+    'view revisions',
+    'revert revisions',
+    'delete revisions',
+    // Path.
+    'create url aliases',
+    // Pathauto.
+    'administer pathauto',
+    //Redirect.
+    'administer redirects',
+    // System
+    'access administration pages',
+    'view the administration theme',
+    'access site reports',
+    'block IP addresses',
+    // Taxonomy.
+    'administer taxonomy',
+    // Toolbar.
+    'access toolbar',
+  );
+  user_role_grant_permissions($editor_role->rid, $editor_permissions);
+
+  // Enable permissions for the recently created content-types.
+  foreach (array('page', 'news', 'event', 'blogpost') as $type) {
+    user_role_grant_permissions(
+      $editor_role->rid,
+      array(
+        'create ' . $type . ' content',
+        'edit own ' . $type . ' content',
+        'edit any ' . $type . ' content',
+        'delete own ' . $type . ' content',
+        'delete any ' . $type . ' content',
+      )
+    );
+  }
+
+  // Grant all available permissions to administrator role.
+  $admin_permissions = array_keys(module_invoke_all('permission'));
+  user_role_grant_permissions($admin_role->rid, $admin_permissions);
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $admin_role->rid);
+
+  // Assign user 1 the "administrator" role.
+  // db_insert('users_roles')->fields(array('uid' => 1, 'rid' => $admin_role->rid))->execute();
+
+  // Enable search for everybody.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('search content'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('search content'));
+
+  // Set permissions for filter formats.
+  user_role_grant_permissions($editor_role->rid, array('use text format full_html'));
+  user_role_grant_permissions($admin_role->rid, array('use text format full_html', 'use text format filtered_html'));
+}
+
+/**
+ * Update system settings.
+ */
+function _p6basics_update_system_settings() {
+  // Enable the admin theme.
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('type', 'theme')
+    ->condition('name', 'seven')
+    ->execute();
+
+  variable_set('admin_theme', 'seven');
+
+  variable_set('node_admin_theme', '1');
+}

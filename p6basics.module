@@ -1,0 +1,342 @@
+<?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function p6basics_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "linkit" && $api == "linkit_profiles") {
+    return array("version" => "1");
+  }
+}
+
+/**
+ * Implements hook_wysiwyg_editor_settings_alter().
+ */
+function p6basics_wysiwyg_editor_settings_alter(&$settings, $context) {
+  if ($context['profile']->editor == 'ckeditor') {
+    $settings['startupOutlineBlocks'] = TRUE;
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Paragraph Lead'),
+      'element' => 'p',
+      'attributes' => array('class' => 'lead'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Muted text'),
+      'element' => 'p',
+      'attributes' => array('class' => 'text-muted'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Primary text'),
+      'element' => 'p',
+      'attributes' => array('class' => 'text-primary'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Success text'),
+      'element' => 'p',
+      'attributes' => array('class' => 'text-success'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Info text'),
+      'element' => 'p',
+      'attributes' => array('class' => 'text-info'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Warning text'),
+      'element' => 'p',
+      'attributes' => array('class' => 'text-warning'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Danger text'),
+      'element' => 'p',
+      'attributes' => array('class' => 'text-danger'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Unstyled List'),
+      'element' => 'ul',
+      'attributes' => array('class' => 'list-unstyled'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Inline List'),
+      'element' => 'ul',
+      'attributes' => array('class' => 'list-inline'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Table'),
+      'element' => 'table',
+      'attributes' => array('class' => 'table'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Striped Table'),
+      'element' => 'table',
+      'attributes' => array('class' => 'table table-striped'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Bordered Table'),
+      'element' => 'table',
+      'attributes' => array('class' => 'table table-bordered'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Table Hover Rows'),
+      'element' => 'table',
+      'attributes' => array('class' => 'table table-hover'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Condensed Table'),
+      'element' => 'table',
+      'attributes' => array('class' => 'table table-condensed'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Rounded Image'),
+      'element' => 'img',
+      'attributes' => array('class' => 'img-rounded'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Circle Image'),
+      'element' => 'img',
+      'attributes' => array('class' => 'img-circle'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Thumbnail Image'),
+      'element' => 'img',
+      'attributes' => array('class' => 'img-thumbnail'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Float IMG to right'),
+      'element' => 'img',
+      'attributes' => array('class' => 'pull-right'),
+      'styles' => array(
+        'margin-left' => '1em',
+        'margin-bottom' => '0.5em',
+      ),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Float IMG to left'),
+      'element' => 'img',
+      'attributes' => array('class' => 'pull-left'),
+      'styles' => array(
+        'margin-right' => '1em',
+        'margin-bottom' => '0.5em',
+      ),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Float to left'),
+      'element' => 'div',
+      'attributes' => array('class' => 'pull-left'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Float to right'),
+      'element' => 'div',
+      'attributes' => array('class' => 'pull-right'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Clear floats'),
+      'element' => 'div',
+      'attributes' => array('class' => 'clearfix'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Screen reader only'),
+      'element' => 'div',
+      'attributes' => array('class' => 'sr-only'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Visible for print'),
+      'element' => 'div',
+      'attributes' => array('class' => 'visible-print'),
+    );
+
+    $settings['stylesSet'][] = array(
+      'name' => t('Hidden for print'),
+      'element' => 'div',
+      'attributes' => array('class' => 'hidden-print'),
+    );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Visible only for XS'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'visible-xs'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Visible only for SM'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'visible-sm'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Visible only for MD'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'visible-md'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Visible only for LG'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'visible-lg'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Hidden only for XS'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'hidden-xs'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Hidden only for SM'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'hidden-sm'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Hidden only for MD'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'hidden-md'),
+    // );
+
+    // $settings['stylesSet'][] = array(
+    //   'name' => t('Hidden only for LG'),
+    //   'element' => 'div',
+    //   'attributes' => array('class' => 'hidden-lg'),
+    // );
+
+    // $settings['entities_latin'] = TRUE;
+    // $settings['entities_greek'] = TRUE;
+
+    // // Default list of the special characters.
+    // $settings['specialChars'] = array(
+    //   '!','"','#','$','%','&',"'",'(',')','*','+','-','.','/',
+    //   '0','1','2','3','4','5','6','7','8','9',':',';',
+    //   '<','=','>','?','@',
+    //   'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',
+    //   'P','Q','R','S','T','U','V','W','X','Y','Z',
+    //   '[',']','^','_','`',
+    //   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
+    //   'q','r','s','t','u','v','w','x','y','z',
+    //   '{','|','}','~',
+    //   "€", "‘", "’", "“", "”", "–", "—", "¡", "¢", "£", "¤", "¥", "¦", "§", "¨", "©", "ª", "«", "¬", "®", "¯", "°", "²", "³", "´", "µ", "¶", "·", "¸", "¹", "º", "»", "¼", "½", "¾", "¿", "À", "Á", "Â", "Ã", "Ä", "Å", "Æ", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï", "Ð", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "×", "Ø", "Ù", "Ú", "Û", "Ü", "Ý", "Þ", "ß", "à", "á", "â", "ã", "ä", "å", "æ", "ç", "è", "é", "ê", "ë", "ì", "í", "î", "ï", "ð", "ñ", "ò", "ó", "ô", "õ", "ö", "÷", "ø", "ù", "ú", "û", "ü", "ý", "þ", "ÿ", "Œ", "œ", "Ŵ", "Ŷ", "ŵ", "ŷ", "‚", "‛", "„", "…", "™", "►", "•", "→", "⇒", "⇔", "♦", "≈",
+    // );
+    // // Greek characters.
+    // $settings['specialChars'][] = array('&Alpha;', 'Alpha');
+    // $settings['specialChars'][] = array('&Beta;', 'Beta');
+    // $settings['specialChars'][] = array('&Gamma;', 'Gamma');
+    // $settings['specialChars'][] = array('&Delta;', 'Delta');
+    // $settings['specialChars'][] = array('&Epsilon;', 'Epsilon');
+    // $settings['specialChars'][] = array('&Zeta;', 'Zeta');
+    // $settings['specialChars'][] = array('&Eta;', 'Eta');
+    // $settings['specialChars'][] = array('&Theta;', 'Theta');
+    // $settings['specialChars'][] = array('&Iota;', 'Iota');
+    // $settings['specialChars'][] = array('&Kappa;', 'Kappa');
+    // $settings['specialChars'][] = array('&Lambda;', 'Lambda');
+    // $settings['specialChars'][] = array('&Mu;', 'Mu');
+    // $settings['specialChars'][] = array('&Nu;', 'Nu');
+    // $settings['specialChars'][] = array('&Xi;', 'Xi');
+    // $settings['specialChars'][] = array('&Omicron;', 'Omicron');
+    // $settings['specialChars'][] = array('&Pi;', 'Pi');
+    // $settings['specialChars'][] = array('&Rho;', 'Rho');
+    // $settings['specialChars'][] = array('&Sigma;', 'Sigma');
+    // $settings['specialChars'][] = array('&Tau;', 'Tau');
+    // $settings['specialChars'][] = array('&Upsilon;', 'Upsilon');
+    // $settings['specialChars'][] = array('&Phi;', 'Phi');
+    // $settings['specialChars'][] = array('&Chi;', 'Chi');
+    // $settings['specialChars'][] = array('&Psi;', 'Psi');
+    // $settings['specialChars'][] = array('&Omega;', 'Omega');
+    // $settings['specialChars'][] = array('&alpha;', 'alpha');
+    // $settings['specialChars'][] = array('&beta;', 'beta');
+    // $settings['specialChars'][] = array('&gamma;', 'gamma');
+    // $settings['specialChars'][] = array('&delta;', 'delta');
+    // $settings['specialChars'][] = array('&epsilon;', 'epsilon');
+    // $settings['specialChars'][] = array('&zeta;', 'zeta');
+    // $settings['specialChars'][] = array('&eta;', 'eta');
+    // $settings['specialChars'][] = array('&theta;', 'theta');
+    // $settings['specialChars'][] = array('&iota;', 'iota');
+    // $settings['specialChars'][] = array('&kappa;', 'kappa');
+    // $settings['specialChars'][] = array('&lambda;', 'lambda');
+    // $settings['specialChars'][] = array('&mu;', 'mu');
+    // $settings['specialChars'][] = array('&nu;', 'nu');
+    // $settings['specialChars'][] = array('&xi;', 'xi');
+    // $settings['specialChars'][] = array('&omicron;', 'omicron');
+    // $settings['specialChars'][] = array('&pi;', 'pi');
+    // $settings['specialChars'][] = array('&rho;', 'rho');
+    // $settings['specialChars'][] = array('&sigmaf;', 'sigmaf');
+    // $settings['specialChars'][] = array('&sigma;', 'sigma');
+    // $settings['specialChars'][] = array('&tau;', 'tau');
+    // $settings['specialChars'][] = array('&upsilon;', 'upsilon');
+    // $settings['specialChars'][] = array('&phi;', 'phi');
+    // $settings['specialChars'][] = array('&chi;', 'chi');
+    // $settings['specialChars'][] = array('&psi;', 'psi');
+    // $settings['specialChars'][] = array('&omega;', 'omega');
+    // $settings['specialChars'][] = array('&thetasym;', 'thetasym');
+    // $settings['specialChars'][] = array('&upsih;', 'upsih');
+    // $settings['specialChars'][] = array('&piv;', 'piv');
+  }
+}
+
+
+/**
+ * Implements hook_date_combo_process_alter().
+ *
+ * Alter the date_combo element after the Date module is finished with it.
+ *
+ * @param array $element
+ *   The $element array.
+ * @param array $form_state
+ *   A keyed array containing the current state of the form.
+ * @param array $context
+ *   An associative array containing the following keys:
+ *   - field: The $field array.
+ *   - instance: The $instance array.
+ *   - form: Nested array of form elements that comprise the form.
+ */
+function p6basics_date_combo_process_alter(&$element, &$form_state, $context) {
+  $instance = $context['instance'];
+  $field_name = $element['#field_name'];
+
+  // News: Force the date entry to be an all day event withount an end date.
+  if (($field_name == 'p6b_date') && ($instance['bundle'] == 'news')) {
+    $element['all_day']['#default_value'] = TRUE;
+    $element['all_day']['#disabled'] = TRUE;
+
+    $element['show_todate']['#default_value'] = FALSE;
+    $element['show_todate']['#disabled'] = TRUE;
+  }
+
+  // Events: Check "All Day" and uncheck "Show End Date" checkboxes by default.
+  // Keep both checkboxes enabled for user to decide.
+  if (($field_name == 'p6b_date') && ($instance['bundle'] == 'event')) {
+    $element['all_day']['#default_value'] = TRUE;
+    $element['show_todate']['#default_value'] = FALSE;
+  }
+
+  // Blog posts: Disable "Show End Date" checkbox.
+  // Keep "All Day" checkbox enabled for user to decide.
+  if (($field_name == 'p6b_date') && ($instance['bundle'] == 'blogpost')) {
+    $element['show_todate']['#default_value'] = FALSE;
+    $element['show_todate']['#disabled'] = TRUE;
+  }
+}
