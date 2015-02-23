@@ -95,7 +95,7 @@ function p6basics_default_linkit_profiles() {
       'remoteTimeout' => '10000',
     ),
   );
-  $export['default'] = $linkit_profile;
+  $export['p6basics_linkit'] = $linkit_profile;
 
   return $export;
 }

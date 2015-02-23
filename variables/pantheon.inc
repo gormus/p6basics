@@ -17,4 +17,4 @@ variable_set('page_compression', 0);
 variable_set('preprocess_css', 1);
 variable_set('preprocess_js', 1);
 variable_set('search_active_modules', $search_active_modules);
-variable_set('search_default_module', 'apachesolr_search');
+variable_set('search_default_module', 'node');

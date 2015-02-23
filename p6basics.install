@@ -58,19 +58,20 @@ function _p6basics_install_modules() {
 
     // Contributed.
     'date',
-    'date_popup',
     'date_all_day',
-    'token',
+    'date_popup',
+    'elements',
+    'extlink',
     'filefield_paths',
     'filefield_sources',
-    'pathauto',
-    'redirect',
     'globalredirect',
+    'html5_tools',
     'imce',
     'imce_mkdir',
     'imce_wysiwyg',
-    'elements',
-    'html5_tools',
+    'pathauto',
+    'redirect',
+    'token',
   );
 
   module_enable($modules, FALSE);

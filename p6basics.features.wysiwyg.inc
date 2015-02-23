@@ -120,7 +120,7 @@ function p6basics_wysiwyg_default_profiles() {
       'css_setting' => 'theme',
       'css_path' => '',
       'stylesSet' => '',
-      'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+      'block_formats' => 'p,h2,h3,h4,h5,h6,div,address,pre',
       'forcePasteAsPlainText' => 1,
     ),
     'rdf_mapping' => array(),
