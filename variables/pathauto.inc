@@ -42,3 +42,4 @@ variable_set('pathauto_separator', '-');
 variable_set('pathauto_transliterate', 1);
 variable_set('pathauto_update_action', 2);
 variable_set('pathauto_user_pattern', '');
+variable_set('pathauto_ignore_words', '');
