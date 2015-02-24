@@ -117,12 +117,12 @@ $imce_profiles = array(
   ),
 );
 $imce_roles_profiles = array(
-  4 => array(
+  3 => array(
     'weight' => 9,
     'public_pid' => 1,
     'private_pid' => 0,
   ),
-  3 => array(
+  4 => array(
     'weight' => 10,
     'public_pid' => 2,
     'private_pid' => 0,
