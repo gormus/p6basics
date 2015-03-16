@@ -50,7 +50,6 @@ function _p6basics_install_modules() {
     'text',
     'toolbar',
     'update',
-    'transliteration',
 
     // Pantheon.
     // 'pantheon_api',
@@ -72,6 +71,7 @@ function _p6basics_install_modules() {
     'pathauto',
     'redirect',
     'token',
+    'transliteration',
   );
 
   module_enable($modules, FALSE);
